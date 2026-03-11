@@ -8,6 +8,7 @@ export const config = {
     API_KEY: process.env.API_KEY || '',
     REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
     HEADLESS: process.env.HEADLESS !== 'false',
+    BROWSER_CHANNEL: process.env.BROWSER_CHANNEL || 'chrome',
     ASKSURF_CHAT_URL: process.env.ASKSURF_CHAT_URL || 'https://asksurf.ai/chat',
     ASKSURF_API_BASE: process.env.ASKSURF_API_BASE || 'https://api.asksurf.ai/muninn/v4/chat',
     QUEUE_CONCURRENCY: parseInt(process.env.QUEUE_CONCURRENCY || '3', 10),

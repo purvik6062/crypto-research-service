@@ -14,14 +14,13 @@ A Node.js TypeScript service that bridges a REST API to AskSurf's internal SSE c
 
 - Node.js 18+
 - Docker (for Redis)
-- Playwright browsers installed (`npx playwright install chromium`)
+- Google Chrome installed locally
 
 ## Setup
 
 1. **Clone and Install**:
    ```bash
    npm install
-   npx playwright install chromium
    ```
 
 2. **Configure**:
@@ -42,7 +41,7 @@ A Node.js TypeScript service that bridges a REST API to AskSurf's internal SSE c
    ```bash
    npm run dev
    ```
-   A browser window will open. Log in to AskSurf manually. Once you see the "Captured fresh Bearer token" log, you can stop the service and set `HEADLESS=true`.
+   A Chrome window will open. Log in to AskSurf manually. If you use Google sign-in, this must be the regular Chrome channel, not Playwright's bundled test browser. Once you see the "Captured fresh Bearer token" log, you can stop the service and set `HEADLESS=true`.
 
 Each incoming question now creates a fresh AskSurf session automatically. You do not need to provide or manage a persistent AskSurf chat ID.
 

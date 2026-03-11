@@ -24,14 +24,29 @@ export class TokenManager {
         this.isInitializing = true;
 
         try {
-            logger.info('TokenManager: Initializing playwright...', { profilePath: config.PROFILE_PATH, headless: config.HEADLESS });
+            logger.info('TokenManager: Initializing playwright...', {
+                profilePath: config.PROFILE_PATH,
+                headless: config.HEADLESS,
+                browserChannel: config.BROWSER_CHANNEL,
+            });
 
             this.context = await chromium.launchPersistentContext(config.PROFILE_PATH, {
+                channel: config.BROWSER_CHANNEL,
                 headless: config.HEADLESS,
+                ignoreDefaultArgs: ['--enable-automation'],
+                args: [
+                    '--disable-blink-features=AutomationControlled',
+                ],
                 viewport: { width: 1280, height: 720 },
             });
 
             this.page = await this.context.newPage();
+
+            await this.context.addInitScript(() => {
+                Object.defineProperty(navigator, 'webdriver', {
+                    get: () => false,
+                });
+            });
 
             this.page.on('request', (request) => {
                 const url = request.url();
