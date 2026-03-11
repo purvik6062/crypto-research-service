@@ -6,12 +6,13 @@ import { nanoid } from 'nanoid';
 import { randomUUID } from 'crypto';
 
 export class AskSurfService {
-    public async ask(question: string, token: string): Promise<string> {
+    public async ask(question: string, token: string, deepResearch: boolean = false): Promise<string> {
         const requestId = nanoid();
         const sessionId = randomUUID();
-        const url = `${config.ASKSURF_API_BASE}/sessions/${sessionId}/sse?session_type=V2&platform=WEB&lang=en`;
+        const sessionType = deepResearch ? 'V2_THINKING' : 'V2';
+        const url = `${config.ASKSURF_API_BASE}/sessions/${sessionId}/sse?session_type=${sessionType}&platform=WEB&lang=en`;
 
-        logger.info('AskSurfService: Sending request...', { requestId, sessionId });
+        logger.info('AskSurfService: Sending request...', { requestId, sessionId, sessionType });
 
         try {
             const response = await fetch(url, {

@@ -14,8 +14,12 @@ export function setupWorker() {
     const worker = new Worker(
         'asksurf-questions',
         async (job: Job) => {
-            const { question } = job.data;
-            logger.info('Worker: Processing job', { jobId: job.id, question: question.substring(0, 50) });
+            const { question, deepResearch } = job.data;
+            logger.info('Worker: Processing job', {
+                jobId: job.id,
+                deepResearch: deepResearch === true,
+                question: question.substring(0, 50),
+            });
 
             let token = tokenManager.getToken();
             if (!token) {
@@ -24,13 +28,13 @@ export function setupWorker() {
             }
 
             try {
-                const answer = await asksurfService.ask(question, token);
+                const answer = await asksurfService.ask(question, token, deepResearch === true);
                 return { answer };
             } catch (error) {
                 if (error instanceof TokenExpiredError) {
                     logger.warn('Worker: Token expired, refreshing and retrying once...', { jobId: job.id });
                     const newToken = await tokenManager.refreshToken();
-                    const answer = await asksurfService.ask(question, newToken);
+                    const answer = await asksurfService.ask(question, newToken, deepResearch === true);
                     return { answer };
                 }
                 throw error;

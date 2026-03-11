@@ -68,6 +68,15 @@ Returns:
 }
 ```
 
+For deeper research requests, send `deepResearch: true`. That switches AskSurf to the `V2_THINKING` session type:
+
+```bash
+curl -X POST http://localhost:3000/asksurf/ask \
+  -H "x-api-key: your-secret-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "Compare the tokenomics, moat, and risks of the top DePIN protocols", "deepResearch": true}'
+```
+
 ## Architecture
 
 1. **Client** sends POST request.

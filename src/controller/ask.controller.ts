@@ -4,15 +4,19 @@ import { config } from '../config/config';
 import { logger } from '../utils/logger';
 
 export const handleAsk = async (req: Request, res: Response) => {
-    const { question } = req.body;
+    const { question, deepResearch } = req.body;
 
     if (!question || typeof question !== 'string' || question.trim().length === 0) {
         return res.status(400).json({ error: 'Question is required and must be a string', code: 'VALIDATION_ERROR' });
     }
 
+    if (deepResearch !== undefined && typeof deepResearch !== 'boolean') {
+        return res.status(400).json({ error: 'deepResearch must be a boolean when provided', code: 'VALIDATION_ERROR' });
+    }
+
     try {
-        const job = await askQueue.add('ask-job', { question });
-        logger.info('Controller: Job enqueued', { jobId: job.id });
+        const job = await askQueue.add('ask-job', { question, deepResearch: deepResearch === true });
+        logger.info('Controller: Job enqueued', { jobId: job.id, deepResearch: deepResearch === true });
 
         try {
             const result = await job.waitUntilFinished(queueEvents, config.QUEUE_TIMEOUT_MS);
