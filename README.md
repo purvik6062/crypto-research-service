@@ -27,12 +27,15 @@ A Node.js TypeScript service that bridges a REST API to AskSurf's internal SSE c
 2. **Configure**:
    Copy `.env.example` to `.env` and fill in:
    - `API_KEY`: A secret key to protect your endpoint.
-   - `ASKSURF_CHAT_ID`: The UUID found in the URL of an existing AskSurf chat (e.g., `https://asksurf.ai/chat/{CHAT_ID}`).
+   - `HEADLESS=false` for the first manual login, then switch it back to `true` after the browser profile is saved.
 
 3. **Start Redis**:
    ```bash
-   docker-compose up -d
+   docker compose up -d redis
    ```
+
+   If you run `npm run dev` on your host machine, keep `REDIS_URL=redis://localhost:6379`.
+   The `redis://redis:6379` hostname is only valid for the app container inside Docker Compose.
 
 4. **First Login (Important)**:
    Set `HEADLESS=false` in `.env` and run:
@@ -40,6 +43,8 @@ A Node.js TypeScript service that bridges a REST API to AskSurf's internal SSE c
    npm run dev
    ```
    A browser window will open. Log in to AskSurf manually. Once you see the "Captured fresh Bearer token" log, you can stop the service and set `HEADLESS=true`.
+
+Each incoming question now creates a fresh AskSurf session automatically. You do not need to provide or manage a persistent AskSurf chat ID.
 
 ## API Usage
 

@@ -3,13 +3,15 @@ import { logger } from '../utils/logger';
 import { TokenExpiredError, AskSurfAPIError } from '../utils/errors';
 import { parseSSEStream } from '../utils/sse.parser';
 import { nanoid } from 'nanoid';
+import { randomUUID } from 'crypto';
 
 export class AskSurfService {
     public async ask(question: string, token: string): Promise<string> {
         const requestId = nanoid();
-        const url = `${config.ASKSURF_API_BASE}/sessions/${config.ASKSURF_CHAT_ID}/sse?session_type=V2&platform=WEB&lang=en`;
+        const sessionId = randomUUID();
+        const url = `${config.ASKSURF_API_BASE}/sessions/${sessionId}/sse?session_type=V2&platform=WEB&lang=en`;
 
-        logger.info('AskSurfService: Sending request...', { requestId, chatId: config.ASKSURF_CHAT_ID });
+        logger.info('AskSurfService: Sending request...', { requestId, sessionId });
 
         try {
             const response = await fetch(url, {
